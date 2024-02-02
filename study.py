@@ -19,7 +19,6 @@ class flashcard:
         self.defin = defin
 cards = []
 flashNum = 0
-
 def makeFlash():
     global flashNum
     global flashcard
@@ -38,7 +37,26 @@ def printFlash(cardNum):
     print("Term:", cards[cardNum].term)
     print("Defin:", cards[cardNum].defin)
 
-
+def compare(answer, inputed):
+    #modify inputed
+    inputed = inputed.strip()
+    inputed = inputed.lower()
+    inputed = inputed.replace(".", " ")
+    inputed = inputed.replace(",", " ")
+    inputed = inputed.replace("-", " ")
+    inputed = inputed.replace("/", " ")
+    #modify answer
+    answer = answer.strip()
+    answer = answer.lower()
+    answer = answer.replace(".", " ")
+    answer = answer.replace(",", " ")
+    answer = answer.replace("-", " ")
+    answer = answer.replace("/", " ")
+    #compare both
+    if answer == inputed:
+        return True
+    else:
+        return False
 def printAllCards():
     for card in cards:
         print("Index", cards.index(card))
@@ -51,11 +69,12 @@ def quizFlash(cardNum):
     term = card.term
     defin = card.defin
     answer = input(term + ": ")
-    if answer == defin:
+    if compare(defin, answer) == True:
         print("Correct!")
     else:
         print("Incorrect")
 def prgExit():
+    print(colors.normal , end="")
     exit()
 while True:
     print("Welcome to Flashcard Maker")
@@ -68,9 +87,13 @@ while True:
         makeFlash()
     elif i == "v":
         cardNum = int(input("What Card? "))
+        if cardNum == "":
+            prgExit()
         printFlash(cardNum)
     elif i == "t":
         cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
+        if cardNum == "":
+            prgExit()
         quizFlash(cardNum)
     elif i == "":
         prgExit()
