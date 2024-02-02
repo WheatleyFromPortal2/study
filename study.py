@@ -25,16 +25,18 @@ def makeFlash():
     global flashcard
     term = input("Term: ")
     defin = input("Definition: ")
-    flashcard = flashcard(term, defin)
-    cards.append(flashcard)
+    #flashcard = flashcard(term, defin)
+    cards.append(flashcard(term, defin))
     flashNum += 1
 
 def printFlash(cardNum):
     card = cards[cardNum]
     term = card.term
     defin = card.defin
-    print("Term:", term)
-    print("Definition", defin)
+    #print("Term:", term)
+    #print("Definition", defin)
+    print("Term:", cards[cardNum].term)
+    print("Defin:", cards[cardNum].defin)
 
 
 def printAllCards():
@@ -60,15 +62,15 @@ while True:
     if flashNum == 0:
         print("Press M to Make Flashcards")
     else:
-        print("Enter V to View Flashcards, Enter T to Test Flashcards")
+        print("Enter V to View Flashcards, Enter T to Test Flashcards, or M to make more")
     i = (input(": ")).lower()
     if i == "m":
         makeFlash()
     elif i == "v":
-        cardNum = input("What Card? ")
-        printFlash(0)
+        cardNum = int(input("What Card? "))
+        printFlash(cardNum)
     elif i == "t":
-        cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s)"))
+        cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
         quizFlash(cardNum)
     elif i == "":
         prgExit()
