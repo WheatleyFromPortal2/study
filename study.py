@@ -61,7 +61,7 @@ while True:
         print("Press M to Make Flashcards")
     else:
         print("Enter V to View Flashcards, Enter T to Test Flashcards")
-    i = (input(": "))
+    i = (input(": ")).lower()
     if i == "m":
         makeFlash()
     elif i == "v":
