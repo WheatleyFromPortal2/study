@@ -40,18 +40,30 @@ def printFlash(cardNum):
 def compare(answer, inputed):
     #modify inputed
     inputed = inputed.strip()
+    inputed = " " + inputed + " "
     inputed = inputed.lower()
     inputed = inputed.replace(".", " ")
     inputed = inputed.replace(",", " ")
     inputed = inputed.replace("-", " ")
     inputed = inputed.replace("/", " ")
+    inputed = inputed.replace(" and ", " ")
+    inputed = inputed.replace(" an ", " ")
+    inputed = inputed.replace(" a ", " ")
+    inputed = inputed.replace(" some ", " ")
+    inputed = inputed.strip()
     #modify answer
     answer = answer.strip()
+    answer = " " + answer + " "
     answer = answer.lower()
     answer = answer.replace(".", " ")
     answer = answer.replace(",", " ")
     answer = answer.replace("-", " ")
     answer = answer.replace("/", " ")
+    answer = answer.replace(" and ", " ")
+    answer = answer.replace(" an ", " ")
+    answer = answer.replace(" a ", " ")
+    answer = answer.replace(" some ", " ")
+    answer = answer.strip()
     #compare both
     if answer == inputed:
         return True
