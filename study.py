@@ -29,11 +29,6 @@ def makeFlash():
     flashNum += 1
 
 def printFlash(cardNum):
-    card = cards[cardNum]
-    term = card.term
-    defin = card.defin
-    #print("Term:", term)
-    #print("Definition", defin)
     print("Term:", cards[cardNum].term)
     print("Defin:", cards[cardNum].defin)
 
