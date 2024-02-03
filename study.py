@@ -19,9 +19,11 @@ class flashcard:
         self.defin = defin
 cards = []
 flashNum = 0
+AiThreshold = 2.5
+isAiCompImported = False
+usingAi = False
 def makeFlash():
     global flashNum
-    global flashcard
     term = input("Term: ")
     defin = input("Definition: ")
     #flashcard = flashcard(term, defin)
@@ -68,23 +70,41 @@ def printAllCards():
     for card in cards:
         print("Index", cards.index(card))
         print("Term:", card.term)
-        print("Definition:", card.defin)
-
+        print("Definition:", card.defin) 
 def quizFlash(cardNum):
     cardNum = int(cardNum)
     card = cards[cardNum]
     term = card.term
     defin = card.defin
     answer = input(term + ": ")
-    if compare(defin, answer) == True:
-        print("Correct!")
+    if usingAi == False:
+        if compare(defin, answer) == True:
+            print("Correct!")
+        else:
+           print("Incorrect")
     else:
-        print("Incorrect")
+        global isAiCompImported
+        #if isAiCompImported == False:
+        #    import aicomp
+        #    isAiCompImported = True      
+        if aicomp.AiCompare(defin, answer) >= AiThreshold: # type: ignore
+            print("[AI] Correct!")
+        else:
+            print("[AI] Incorrect")
 def prgExit():
     print(colors.normal , end="")
     exit()
 while True:
     print("Welcome to Flashcard Maker")
+    if isAiCompImported == False:
+        i = input("Ai is not imported, do you want to import it? (Y/N)")
+        i = i.strip().lower()
+        if i == "y":
+            print("Importing AI (this might take a second)")
+            import aicomp
+            isAiCompImported = True
+        else:
+            print("Ai Functions will not be accessible")
     if flashNum == 0:
         print("Press M to Make Flashcards")
     else:
@@ -98,6 +118,12 @@ while True:
             prgExit()
         printFlash(cardNum)
     elif i == "t":
+        cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
+        if cardNum == "":
+            prgExit()
+        quizFlash(cardNum)
+    elif i == "y":
+        usingAi = True
         cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
         if cardNum == "":
             prgExit()
