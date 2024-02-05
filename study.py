@@ -97,23 +97,23 @@ def prgExit():
 while True:
     print("Welcome to Flashcard Maker")
     if isAiCompImported == False:
-        i = input("Ai is not imported, do you want to import it? (Y/N)")
+        i = input("AI is not imported, do you want to import it? (Y/N): ")
         i = i.strip().lower()
         if i == "y":
             print("Importing AI (this might take a second)")
             import aicomp
             isAiCompImported = True
         else:
-            print("Ai Functions will not be accessible")
+            print("AI Functions will not be accessible")
     if flashNum == 0:
         print("Press M to Make Flashcards")
     else:
-        print("Enter V to View Flashcards, Enter T to Test Flashcards, or M to make more")
+        print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
     i = (input(": ")).lower()
     if i == "m":
         makeFlash()
     elif i == "v":
-        cardNum = int(input("What Card? "))
+        cardNum = int(input("What Card?: "))
         if cardNum == "":
             prgExit()
         printFlash(cardNum)
