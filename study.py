@@ -1,4 +1,5 @@
 import json
+
 class colors:
     red = '\033[91m'
     green = '\033[92m'
@@ -79,6 +80,13 @@ def saveJson():
     jsonObj = json.dumps(cards, indent=4)
     with open(jsonFile, "w") as outfile:
         outfile.write(jsonObj)
+def readJson():
+    with open(jsonFile, "r") as infile:
+        jsonStr = infile.read()
+        jCards = json.loads(jsonStr)
+    global cards
+    cards = jCards
+    print(jCards)
 def quizFlash(cardNum):
     cardNum = int(cardNum)
     #card = cards[cardNum]
@@ -154,5 +162,8 @@ while True:
     elif i == "s":
         print(f"Saving JSON to {jsonFile}")
         saveJson()
+    elif i == "r":
+        print(f"Reading from {jsonFile}")
+        readJson()
     else:
         print(colors.warn + "Invalid Option" + colors.normal)
