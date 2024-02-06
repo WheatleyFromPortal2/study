@@ -76,7 +76,7 @@ def printAllCards():
         print(card)
 def saveJson():
     #jsonObj = json.dumps(cards[0].term, indent=4)
-    jsonObj = json.dumps(cards[0], indent=4)
+    jsonObj = json.dumps(cards, indent=4)
     with open(jsonFile, "w") as outfile:
         outfile.write(jsonObj)
 def quizFlash(cardNum):
@@ -104,6 +104,14 @@ def quizFlash(cardNum):
 def prgExit():
     print(colors.normal , end="")
     exit()
+def help():
+    print("""
+V => View Flashcard
+T => Test Flashcard
+Y => Test with Ai 
+M => Make Flashcard
+S => Save Flashcard
+R => Read Flashcard""")
 while True:
     print("Welcome to Flashcard Maker")
     if isAiCompImported == False:
@@ -118,7 +126,8 @@ while True:
     if flashNum == 0:
         print("Press M to Make Flashcards")
     else:
-        print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
+        #print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
+        help()
     i = (input(": ")).lower()
     if i == "m":
         makeFlash()
