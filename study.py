@@ -1,3 +1,4 @@
+import json
 class colors:
     red = '\033[91m'
     green = '\033[92m'
@@ -10,29 +11,33 @@ class colors:
     underline = '\033[4m'
     warn = '\033[91m\033[1m\033[4m'
 
-class flashcard:
-    def __init__(self, term, defin):
-        self.term = term
-        self.defin = defin
-    def __call__(self, term, defin):
-        self.term = term
-        self.defin = defin
+#class flashcard:
+#    def __init__(self, term, defin):
+#        self.term = term
+#        self.defin = defin
+#    def __call__(self, term, defin):
+#        self.term = term
+#        self.defin = defin
 cards = []
 flashNum = 0
 AiThreshold = 2.5
 isAiCompImported = False
 usingAi = False
+jsonFile = "set.json"
 def makeFlash():
     global flashNum
     term = input("Term: ")
     defin = input("Definition: ")
-    #flashcard = flashcard(term, defin)
-    cards.append(flashcard(term, defin))
+    card = dict(term = term, defin = defin)
+    cards.append(card)
+    #cards.append(flashcard(term, defin))
     flashNum += 1
 
 def printFlash(cardNum):
-    print("Term:", cards[cardNum].term)
-    print("Defin:", cards[cardNum].defin)
+    #print("Term:", cards[cardNum].term)
+    #print("Defin:", cards[cardNum].defin)
+    print("Term: " + cards[cardNum].get("term"))
+    print("Definition: " + cards[cardNum].get("defin"))
 
 def compare(answer, inputed):
     #modify inputed
@@ -68,14 +73,17 @@ def compare(answer, inputed):
         return False
 def printAllCards():
     for card in cards:
-        print("Index", cards.index(card))
-        print("Term:", card.term)
-        print("Definition:", card.defin) 
+        print(card)
+def saveJson():
+    #jsonObj = json.dumps(cards[0].term, indent=4)
+    jsonObj = json.dumps(cards[0], indent=4)
+    with open(jsonFile, "w") as outfile:
+        outfile.write(jsonObj)
 def quizFlash(cardNum):
     cardNum = int(cardNum)
-    card = cards[cardNum]
-    term = card.term
-    defin = card.defin
+    #card = cards[cardNum]
+    term = cards[cardNum].get("term")
+    defin = cards[cardNum].get("defin")
     answer = input(term + ": ")
     if usingAi == False:
         if compare(defin, answer) == True:
@@ -87,7 +95,9 @@ def quizFlash(cardNum):
         #if isAiCompImported == False:
         #    import aicomp
         #    isAiCompImported = True      
-        if aicomp.AiCompare(defin, answer) >= AiThreshold: # type: ignore
+        result = aicomp.AiCompare(defin, answer)
+        print(f"[AI]: {result}")
+        if result >= AiThreshold: # type: ignore
             print("[AI] Correct!")
         else:
             print("[AI] Incorrect")
@@ -132,5 +142,8 @@ while True:
         prgExit()
     elif i == "a":
         printAllCards()
+    elif i == "s":
+        print(f"Saving JSON to {jsonFile}")
+        saveJson()
     else:
         print(colors.warn + "Invalid Option" + colors.normal)
