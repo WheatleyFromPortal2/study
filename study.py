@@ -118,19 +118,20 @@ V => View Flashcard
 T => Test Flashcard
 Y => Test with Ai 
 M => Make Flashcard
+A => List all Flashcards
 S => Save Flashcard
 R => Read Flashcard""")
+print("Welcome to Flashcard Maker")
+if isAiCompImported == False:
+    i = input("AI is not imported, do you want to import it? (Y/N): ")
+    i = i.strip().lower()
+    if i == "y":
+        print("Importing AI (this might take a second)")
+        import aicomp
+        isAiCompImported = True
+    else:
+        print("AI Functions will not be accessible")
 while True:
-    print("Welcome to Flashcard Maker")
-    if isAiCompImported == False:
-        i = input("AI is not imported, do you want to import it? (Y/N): ")
-        i = i.strip().lower()
-        if i == "y":
-            print("Importing AI (this might take a second)")
-            import aicomp
-            isAiCompImported = True
-        else:
-            print("AI Functions will not be accessible")
     if flashNum == 0:
         print("Press M to Make Flashcards")
     else:
