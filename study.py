@@ -108,6 +108,8 @@ def quizFlash(cardNum):
         if result >= AiThreshold: # type: ignore
             print("[AI] Correct!")
         else:
+            if compare(defin, answer) == True:
+                print("Correct!")
             print("[AI] Incorrect")
 def prgExit():
     print(colors.normal , end="")
@@ -141,20 +143,23 @@ while True:
     if i == "m":
         makeFlash()
     elif i == "v":
-        cardNum = int(input("What Card?: "))
+        cardNum = input("What Card?: ")
         if cardNum == "":
             prgExit()
+        cardNum = int(cardNum) - 1
         printFlash(cardNum)
     elif i == "t":
-        cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
+        cardNum = input("What Card? There are " + str(len(cards)) + " Card(s): ")
         if cardNum == "":
             prgExit()
+        cardNum = int(cardNum) - 1
         quizFlash(cardNum)
     elif i == "y":
         usingAi = True
-        cardNum = int(input("What Card? There are " + str(flashNum) + " Card(s): "))
+        cardNum = input("What Card? There are " + str(len(cards)) + " Card(s): ")
         if cardNum == "":
             prgExit()
+        cardNum = int(cardNum) - 1
         quizFlash(cardNum)
     elif i == "":
         prgExit()
