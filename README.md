@@ -1,11 +1,13 @@
 # study
 ## Description
 Simple Python Flashcard App
-## Requires: 
 
-[AndriyMulyar/semantic-text-similarity](https://github.com/AndriyMulyar/semantic-text-similarity)
+# Requirements
+* [python3](https://www.python.org/downloads/)
 
-## Install Dependencies: 
+# Installation
+Install setup.sh
 ```
-pip install semantic-text-similarity
+source setup.sh
 ```
+**Virtual env located at .venv**
