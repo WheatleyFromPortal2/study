@@ -1,6 +1,6 @@
 import json
 import os.path
-
+import ht
 class colors:
     red = '\033[91m'
     green = '\033[92m'
@@ -83,12 +83,6 @@ def compare(answer, inputed):
 def printAllCards():
     for card in cards:
         print(card)
-def termSpace(): # function for printing 2 newlines
-    print(colors.blue, end="")
-    termSize = os.get_terminal_size(0)
-    for i in range(termSize.columns):
-        print("-", end="")
-    print(colors.normal, end="")
 
 def saveJson():
     #jsonObj = json.dumps(cards[0].term, indent=4)
@@ -109,8 +103,10 @@ def readCfg(): # read config file
         global cfg
         cfgStr = inFile.read()
         cfg = json.loads(cfgStr)
-    print("---Config File---")
+    ht.tHeader("Config File")
+    print(colors.cyan, end="")
     print(cfg)
+    ht.tSpace()
     AiThreshold = cfg['AiThreshold']
     autoloadSets = cfg['autoloadSets']
 
@@ -126,15 +122,15 @@ def createCfg(): # creates config file, OVERWRITES CONFIG FILE
     if usingAi == True:
         import aicomp
         isAiCompImported = True
-    cfg = {'UsesAI': usingAi, 'autoloadSets': True, 'AiThreshold': AiThreshold}
+    cfg = {'usesAi': usingAi, 'autoloadSets': True, 'AiThreshold': AiThreshold, 'help': True}
     saveCfg()
 
 def cfgMenu():
     global cfg
-    print("Welcome to Config Menu\nCurrent Config:")
-    termSpace()
+    ht.tHeader("Welcome to Config Menu")
+    print("Current Config:")
     print(cfg)
-    termSpace()
+    ht.tSpace()
     i = input("What would you like to change?\n: ")
     print(i, "=", cfg[i])
     print("Type:", type(i))
@@ -150,12 +146,14 @@ def cfgMenu():
             print(colors.warn + "Please enter either " + colors.normal + colors.blue + "True" + colors.normal + "/" + colors.red + "False" + colors.normal)
     cfg[i] = v
     saveCfg()
+
 def quizFlash(cardNum):
     cardNum = int(cardNum)
     #card = cards[cardNum]
     term = cards[cardNum].get("term")
     defin = cards[cardNum].get("defin")
-    answer = input(term + ": ")
+    ht.tBox(term)
+    answer = input(": ")
     if usingAi == False:
         if compare(defin, answer) == True:
             print("Correct!")
@@ -174,37 +172,39 @@ def quizFlash(cardNum):
             if compare(defin, answer) == True:
                 print("Correct!")
             print("[AI] Incorrect")
+
 def prgExit():
     saveCfg()
     print(colors.normal , end="")
     exit()
+
 def help():
-    print("""
-V => View Flashcard
-T => Test Flashcard
-Y => Test with Ai 
-M => Make Flashcard
-A => List all Flashcards
-S => Save Flashcard
-R => Read Flashcard""")
-print("Welcome to Flashcard Maker")
+    if flashNum > 0:
+        print(colors.blue + "V => View Flashcard\nA => List all Flashcards")
+        print(colors.green + "T => Test Flashcard")
+        if usingAi:
+            print(colors.purple + "T => Test with AI")
+    print(colors.yellow + "S => Save Flashcards")
+    print("R => Read Flaschards")
+    print(colors.purple + "M => Make Flashcard" + colors.normal)
+
+ht.tHeader("Welcome to Flashcard Maker!", colors.green, colors.blue)
+
 if os.path.exists(cfgFile):
     readCfg()
 else: 
     createCfg()
-if cfg['UsesAI'] == True:
+if cfg['usesAi'] == True:
     import aicomp
 if cfg['autoloadSets'] == True:
     readJson()
 else:
     print("Could not find Config File, creating one")
     createCfg()
-help()
+flashNum = len(cards)
 while True:
-    if flashNum == 0:
-        print("Press M to Make Flashcards")
-    else:
-        #print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
+    #print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
+    if cfg['help']:
         help()
     i = (input(": ")).lower()
     if i == "m":
