@@ -1,3 +1,4 @@
+print("Importing AI, this might take a second")
 from semantic_text_similarity.models import WebBertSimilarity
 from semantic_text_similarity.models import ClinicalBertSimilarity
 

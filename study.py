@@ -1,4 +1,5 @@
 import json
+import os.path
 
 class colors:
     red = '\033[91m'
@@ -12,19 +13,26 @@ class colors:
     underline = '\033[4m'
     warn = '\033[91m\033[1m\033[4m'
 
-#class flashcard:
-#    def __init__(self, term, defin):
-#        self.term = term
-#        self.defin = defin
-#    def __call__(self, term, defin):
-#        self.term = term
-#        self.defin = defin
 cards = []
 flashNum = 0
-AiThreshold = 2.5
+AiThreshold = 2.5 # default val, cfgFile overides it
 isAiCompImported = False
 usingAi = False
 jsonFile = "sets/set.json"
+cfgFile = "cfg.json"
+def yn(q):
+    i = input(q + "\n(Y/N): ")
+    i = i.lower()
+    if i == "y":
+        global result
+        result = True
+    elif i == "n":
+        result = False
+    else:
+        print(colors.warn + "Please enter: Y,N,y,n" + colors.normal)
+        prgExit()
+    return result
+
 def makeFlash():
     global flashNum
     term = input("Term: ")
@@ -75,18 +83,73 @@ def compare(answer, inputed):
 def printAllCards():
     for card in cards:
         print(card)
+def termSpace(): # function for printing 2 newlines
+    print(colors.blue, end="")
+    termSize = os.get_terminal_size(0)
+    for i in range(termSize.columns):
+        print("-", end="")
+    print(colors.normal, end="")
+
 def saveJson():
     #jsonObj = json.dumps(cards[0].term, indent=4)
     jsonObj = json.dumps(cards, indent=4)
-    with open(jsonFile, "w") as outfile:
-        outfile.write(jsonObj)
+    with open(jsonFile, "w") as outFile:
+        outFile.write(jsonObj)
 def readJson():
-    with open(jsonFile, "r") as infile:
-        jsonStr = infile.read()
+    with open(jsonFile, "r") as inFile:
+        jsonStr = inFile.read()
         jCards = json.loads(jsonStr)
     global cards
     cards = jCards
-    print(jCards)
+    #print(jCards)
+
+def readCfg(): # read config file
+    global cfg, AiThreshold, autoloadSets
+    with open(cfgFile, "r") as inFile:
+        global cfg
+        cfgStr = inFile.read()
+        cfg = json.loads(cfgStr)
+    print("---Config File---")
+    print(cfg)
+    AiThreshold = cfg['AiThreshold']
+    autoloadSets = cfg['autoloadSets']
+
+def saveCfg():
+    cfgObj = json.dumps(cfg, indent=4)
+    with open(cfgFile, "w") as outFile:
+        outFile.write(cfgObj)
+    readCfg() # update values
+
+def createCfg(): # creates config file, OVERWRITES CONFIG FILE
+    global cfg, isAiCompImported
+    usingAi = yn("Do you want to use AI to compare term/definition?")
+    if usingAi == True:
+        import aicomp
+        isAiCompImported = True
+    cfg = {'UsesAI': usingAi, 'autoloadSets': True, 'AiThreshold': AiThreshold}
+    saveCfg()
+
+def cfgMenu():
+    global cfg
+    print("Welcome to Config Menu\nCurrent Config:")
+    termSpace()
+    print(cfg)
+    termSpace()
+    i = input("What would you like to change?\n: ")
+    print(i, "=", cfg[i])
+    print("Type:", type(i))
+    v = input("What would you like the value to be?\n: ")
+    if type(cfg[i]) == int:
+        v = int() # make input an int
+    elif type(cfg[i]) == bool:
+        if v == "True":
+            v = True
+        elif v == "False":
+            v = False
+        else:
+            print(colors.warn + "Please enter either " + colors.normal + colors.blue + "True" + colors.normal + "/" + colors.red + "False" + colors.normal)
+    cfg[i] = v
+    saveCfg()
 def quizFlash(cardNum):
     cardNum = int(cardNum)
     #card = cards[cardNum]
@@ -112,6 +175,7 @@ def quizFlash(cardNum):
                 print("Correct!")
             print("[AI] Incorrect")
 def prgExit():
+    saveCfg()
     print(colors.normal , end="")
     exit()
 def help():
@@ -124,15 +188,18 @@ A => List all Flashcards
 S => Save Flashcard
 R => Read Flashcard""")
 print("Welcome to Flashcard Maker")
-if isAiCompImported == False:
-    i = input("AI is not imported, do you want to import it? (Y/N): ")
-    i = i.strip().lower()
-    if i == "y":
-        print("Importing AI (this might take a second)")
-        import aicomp
-        isAiCompImported = True
-    else:
-        print("AI Functions will not be accessible")
+if os.path.exists(cfgFile):
+    readCfg()
+else: 
+    createCfg()
+if cfg['UsesAI'] == True:
+    import aicomp
+if cfg['autoloadSets'] == True:
+    readJson()
+else:
+    print("Could not find Config File, creating one")
+    createCfg()
+help()
 while True:
     if flashNum == 0:
         print("Press M to Make Flashcards")
@@ -171,5 +238,7 @@ while True:
     elif i == "r":
         print(f"Reading from {jsonFile}")
         readJson()
+    elif i == "c":
+        cfgMenu()
     else:
         print(colors.warn + "Invalid Option" + colors.normal)
