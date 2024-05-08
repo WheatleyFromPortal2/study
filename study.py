@@ -24,7 +24,7 @@ flashNum = 0
 AiThreshold = 2.5
 isAiCompImported = False
 usingAi = False
-jsonFile = "set.json"
+jsonFile = "sets/set.json"
 def makeFlash():
     global flashNum
     term = input("Term: ")
