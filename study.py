@@ -16,12 +16,13 @@ class colors:
 cards = []
 flashNum = 0
 AiThreshold = 2.5 # default val, cfgFile overides it
+cursor = ": "
 isAiCompImported = False
 usingAi = False
 jsonFile = "sets/set.json"
 cfgFile = "cfg.json"
 def yn(q):
-    i = input(q + "\n(Y/N): ")
+    i = input(q + "\n(Y/N)" + cursor)
     i = i.lower()
     if i == "y":
         global result
@@ -35,9 +36,9 @@ def yn(q):
 
 def makeFlash():
     global flashNum
-    term = input("Term: ")
-    defin = input("Definition: ")
-    card = dict(term = term, defin = defin)
+    term = input("Term" + cursor)
+    defin = input("Definition" + cursor)
+    card = dict(term = term, defin = defin, correct = 0, incorrect = 0)
     cards.append(card)
     #cards.append(flashcard(term, defin))
     flashNum += 1
@@ -128,22 +129,12 @@ def createCfg(): # creates config file, OVERWRITES CONFIG FILE
 def cfgMenu():
     global cfg
     ht.tHeader("Welcome to Config Menu")
-    print("Current Config:")
+    print("Current Config:" + colors.purple)
     print(cfg)
     ht.tSpace()
-    i = input("What would you like to change?\n: ")
+    i = input(colors.blue + "What would you like to change?" + colors.normal + "\n: ")
     print(i, "=", cfg[i])
-    print("Type:", type(i))
-    v = input("What would you like the value to be?\n: ")
-    if type(cfg[i]) == int:
-        v = int() # make input an int
-    elif type(cfg[i]) == bool:
-        if v == "True":
-            v = True
-        elif v == "False":
-            v = False
-        else:
-            print(colors.warn + "Please enter either " + colors.normal + colors.blue + "True" + colors.normal + "/" + colors.red + "False" + colors.normal)
+    v = input("What would you like the value to be? " + colors.warn + "Case Sensitive!" + colors.normal + "\n: ")
     cfg[i] = v
     saveCfg()
 
@@ -152,13 +143,17 @@ def quizFlash(cardNum):
     #card = cards[cardNum]
     term = cards[cardNum].get("term")
     defin = cards[cardNum].get("defin")
+    correct = cards[cardNum].get("correct")
+    incorrect = cards[cardNum].get("incorrect")
     ht.tBox(term)
     answer = input(": ")
     if usingAi == False:
         if compare(defin, answer) == True:
             print("Correct!")
+            cards[cardNum]["correct"] = correct + 1
         else:
            print("Incorrect")
+           cards[cardNum]["incorrect"] = incorrect + 1
     else:
         global isAiCompImported
         #if isAiCompImported == False:
@@ -196,11 +191,8 @@ else:
     createCfg()
 if cfg['usesAi'] == True:
     import aicomp
-if cfg['autoloadSets'] == True:
+if cfg['autoloadSets'] == True and os.path.exists(jsonFile):
     readJson()
-else:
-    print("Could not find Config File, creating one")
-    createCfg()
 flashNum = len(cards)
 while True:
     #print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
