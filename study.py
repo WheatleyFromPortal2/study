@@ -132,9 +132,9 @@ def cfgMenu():
     print("Current Config:" + colors.purple)
     print(cfg)
     ht.tSpace()
-    i = input(colors.blue + "What would you like to change?" + colors.normal + "\n: ")
+    i = input(colors.blue + "What would you like to change?" + colors.normal + "\n" + cursor)
     print(i, "=", cfg[i])
-    v = input("What would you like the value to be? " + colors.warn + "Case Sensitive!" + colors.normal + "\n: ")
+    v = input("What would you like the value to be? " + colors.warn + "Case Sensitive!" + colors.normal + "\n" + cursor)
     cfg[i] = v
     saveCfg()
 
@@ -146,7 +146,7 @@ def quizFlash(cardNum):
     correct = cards[cardNum].get("correct")
     incorrect = cards[cardNum].get("incorrect")
     ht.tBox(term)
-    answer = input(": ")
+    answer = input(cursor)
     if usingAi == False:
         if compare(defin, answer) == True:
             print("Correct!")
@@ -156,9 +156,6 @@ def quizFlash(cardNum):
            cards[cardNum]["incorrect"] = incorrect + 1
     else:
         global isAiCompImported
-        #if isAiCompImported == False:
-        #    import aicomp
-        #    isAiCompImported = True      
         result = aicomp.AiCompare(defin, answer)
         print(f"[AI]: {result}")
         if result >= AiThreshold: # type: ignore
@@ -198,7 +195,7 @@ while True:
     #print("Enter V to View Flashcards, Enter T to Test Flashcards, Enter Y to Test with AI, or M to make more")
     if cfg['help']:
         help()
-    i = (input(": ")).lower()
+    i = (input(cursor)).lower()
     if i == "m":
         makeFlash()
     elif i == "v":
