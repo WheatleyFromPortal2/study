@@ -16,7 +16,7 @@ class colors:
 cards = []
 flashNum = 0
 AiThreshold = 2.5 # default val, cfgFile overides it
-cursor = ": "
+cursor = colors.purple + ": " + colors.normal
 isAiCompImported = False
 usingAi = False
 jsonFile = "sets/set.json"
@@ -111,7 +111,7 @@ def readCfg(): # read config file
     #print(colors.cyan, end="")
     #print(cfg)
     #ht.tSpace()
-    AiThreshold = cfg['AiThreshold']
+    AiThreshold = float(cfg['AiThreshold'])
     autoloadSets = cfg['autoloadSets']
     usingAi = cfg['usesAi']
 
@@ -137,6 +137,8 @@ def cfgMenu():
     print(cfg)
     ht.tSpace()
     i = input(colors.blue + "What would you like to change?" + colors.normal + "\n" + cursor)
+    if i == "":
+        return None
     print(i, "=", cfg[i])
     v = input("What would you like the value to be? " + colors.warn + "Case Sensitive!" + colors.normal + "\n" + cursor)
     cfg[i] = v
@@ -179,7 +181,7 @@ def help():
     if flashNum > 0:
         help = colors.blue + "V => View Flashcard \nA => List all Cards\n" + colors.green + "T => Test Flashcard \n"
         if usingAi:
-            help += colors.purple + "T => Test with AI\n"
+            help += colors.purple + "T => Test with AI   \n"
     help += colors.yellow + "S => Save Flashcards\n"
     help += "R => Read Flashcards\n"
     help += colors.purple + "M => Make Flashcard " + colors.normal
