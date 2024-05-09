@@ -17,6 +17,7 @@ cards = []
 flashNum = 0
 AiThreshold = 2.5 # default val, cfgFile overides it
 cursor = colors.purple + ": " + colors.normal
+sep = " | "
 isAiCompImported = False
 usingAi = False
 jsonFile = "sets/set.json"
@@ -83,7 +84,11 @@ def compare(answer, inputed):
         return False
 def printAllCards():
     for card in cards:
-        print(card)
+        cardStr = f"Term: {card['term']}" + sep
+        cardStr += f"Defin: {card['defin']}" + "\n"
+        cardStr += f"Correct: {card['correct']}" + sep
+        cardStr += f"Incorrect: {card['incorrect']}"
+        ht.tBox(cardStr, colors.cyan, colors.yellow)
 
 def saveJson():
     #jsonObj = json.dumps(cards[0].term, indent=4)
@@ -145,6 +150,8 @@ def cfgMenu():
     saveCfg()
 
 def quizFlash(cardNum):
+    global correct, incorrect
+
     cardNum = int(cardNum)
     #card = cards[cardNum]
     term = cards[cardNum].get("term")
@@ -158,7 +165,7 @@ def quizFlash(cardNum):
             print("Correct!")
             cards[cardNum]["correct"] = correct + 1
         else:
-           print("Incorrect")
+           print("Incorrect!")
            cards[cardNum]["incorrect"] = incorrect + 1
     else:
         global isAiCompImported
@@ -166,10 +173,13 @@ def quizFlash(cardNum):
         print(f"[AI]: {result}")
         if result >= AiThreshold: # type: ignore
             print("[AI] Correct!")
+            cards[cardNum]["correct"] = correct + 1
         else:
             if compare(defin, answer) == True:
                 print("Correct!")
-            print("[AI] Incorrect")
+                cards[cardNum]["correct"] = correct + 1
+            print("[AI] Incorrect!")
+            cards[cardNum]["incorrect"] = incorrect + 1
 
 def prgExit():
     saveCfg()
