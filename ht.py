@@ -29,12 +29,22 @@ def tHeader(string, bColor=colors.blue, tColor=colors.purple):
 
 def tBox(string, bColor=colors.blue, tColor=colors.purple):
     termSize = os.get_terminal_size(0)
-    strLen = len(string)
-    if strLen <= (termSize.columns -2): # if the string is smaller than the width of the terminal
+    if "\n" not in string: # Normal Method
+        strLen = len(string)
+        if strLen <= (termSize.columns -2): # if the string is smaller than the width of the terminal
+            print(bColor + "+" + "-"*strLen + "+") # Print the top of the box
+            print(bColor + "|" + tColor + string + bColor + "|")
+            print(bColor + "+" + "-"*strLen + "+" + colors.normal) # Print the bottom of the box
+        else: # if the string is larger than the width of the terminal
+            tSpace(bColor)
+            print(tColor + string)
+            tSpace(bColor)
+    else: # If it contains multiple lines
+        string = string.split('\n') # Split the string based on newline characters
+        strLen = len(max(string, key=len)) # find the length of the greatest string
         print(bColor + "+" + "-"*strLen + "+") # Print the top of the box
-        print(bColor + "|" + tColor + string + bColor + "|")
+        for i in string:
+            if len(i) != strLen:
+                i = i + " "*(strLen - len(i))
+            print(bColor + "|" + tColor + i + bColor + "|")
         print(bColor + "+" + "-"*strLen + "+" + colors.normal) # Print the bottom of the box
-    else: # if the string is larger than the width of the terminal
-        tSpace(bColor)
-        print(tColor + string)
-        tSpace(bColor)
