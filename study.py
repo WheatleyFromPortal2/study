@@ -104,10 +104,10 @@ def readCfg(): # read config file
         global cfg
         cfgStr = inFile.read()
         cfg = json.loads(cfgStr)
-    ht.tHeader("Config File")
-    print(colors.cyan, end="")
-    print(cfg)
-    ht.tSpace()
+    #ht.tHeader("Config File")
+    #print(colors.cyan, end="")
+    #print(cfg)
+    #ht.tSpace()
     AiThreshold = cfg['AiThreshold']
     autoloadSets = cfg['autoloadSets']
 
@@ -171,14 +171,15 @@ def prgExit():
     exit()
 
 def help():
+    help = ""
     if flashNum > 0:
-        print(colors.blue + "V => View Flashcard\nA => List all Flashcards")
-        print(colors.green + "T => Test Flashcard")
+        help = colors.blue + "V => View Flashcard \nA => List all Cards\n" + colors.green + "T => Test Flashcard \n"
         if usingAi:
-            print(colors.purple + "T => Test with AI")
-    print(colors.yellow + "S => Save Flashcards")
-    print("R => Read Flaschards")
-    print(colors.purple + "M => Make Flashcard" + colors.normal)
+            help += colors.purple + "T => Test with AI\n"
+    help += colors.yellow + "S => Save Flashcards\n"
+    help += "R => Read Flashcards\n"
+    help += colors.purple + "M => Make Flashcard " + colors.normal
+    ht.tBox(help)
 
 ht.tHeader("Welcome to Flashcard Maker!", colors.green, colors.blue)
 

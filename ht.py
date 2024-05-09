@@ -1,4 +1,5 @@
 import os
+import re
 class colors:
     red = '\033[91m'
     green = '\033[92m'
@@ -40,8 +41,23 @@ def tBox(string, bColor=colors.blue, tColor=colors.purple):
             print(tColor + string)
             tSpace(bColor)
     else: # If it contains multiple lines
+        strippedString = string
         string = string.split('\n') # Split the string based on newline characters
-        strLen = len(max(string, key=len)) # find the length of the greatest string
+        # Strip 7-bit C1 ANSI sequences, taken from https://stackoverflow.com/a/14693789
+        ansi_escape = re.compile(r'''
+\x1B  # ESC
+(?:   # 7-bit C1 Fe (except CSI)
+[@-Z\\-_]
+|     # or [ for CSI, followed by a control sequence
+    \[
+    [0-?]*  # Parameter bytes
+    [ -/]*  # Intermediate bytes
+    [@-~]   # Final byte
+)
+''', re.VERBOSE)
+        strippedString = ansi_escape.sub('', strippedString)
+        strippedString = strippedString.split('\n')
+        strLen = len(max(strippedString, key=len)) # find the length of the greatest string
         print(bColor + "+" + "-"*strLen + "+") # Print the top of the box
         for i in string:
             if len(i) != strLen:
