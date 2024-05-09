@@ -91,15 +91,18 @@ def saveJson():
     with open(jsonFile, "w") as outFile:
         outFile.write(jsonObj)
 def readJson():
-    with open(jsonFile, "r") as inFile:
-        jsonStr = inFile.read()
-        jCards = json.loads(jsonStr)
-    global cards
-    cards = jCards
-    #print(jCards)
+    if os.path.exists(jsonFile):
+        with open(jsonFile, "r") as inFile:
+            jsonStr = inFile.read()
+            jCards = json.loads(jsonStr)
+        global cards
+        cards = jCards
+        #print(jCards)
+    else:
+        ht.tBox(f"No JSON file Found! at {jsonFile}", colors.yellow, colors.red)
 
 def readCfg(): # read config file
-    global cfg, AiThreshold, autoloadSets
+    global cfg, AiThreshold, autoloadSets, usingAi
     with open(cfgFile, "r") as inFile:
         global cfg
         cfgStr = inFile.read()
@@ -110,6 +113,7 @@ def readCfg(): # read config file
     #ht.tSpace()
     AiThreshold = cfg['AiThreshold']
     autoloadSets = cfg['autoloadSets']
+    usingAi = cfg['usesAi']
 
 def saveCfg():
     cfgObj = json.dumps(cfg, indent=4)
